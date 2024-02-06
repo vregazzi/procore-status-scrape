@@ -1,3 +1,4 @@
+import json
 from pprint import pprint
 
 import requests
@@ -15,28 +16,32 @@ def check_status() -> bool:
     return False
 
 
-def scrape_page():
+def scrape_page() -> dict[dict, str]:
     r = requests.get('https://status.procore.com/')
     soup = BeautifulSoup(r.text, 'html.parser')
-    service_groups = []
+    service_groups = {}
+    statuses = []
 
-    service_group_div = soup.find_all("div", class_='component-container border-color is-group')
-    for thing in service_group_div:
-        services = []
-        top = thing.span.text.strip()
-        service_div = thing.find_all("div", class_="component-inner-container status-green")
-        print(len(service_div))
-        for l in service_div:
-            new_thing = l.span.text.strip()
-            services.append(new_thing)
+    all_group_divs = soup.find_all("div", class_='component-container border-color is-group')
+    for group_div in all_group_divs:
+        group_name = (group_div.span.text.strip())
+        services = {}
+        service_divs = group_div.find_all("div", class_="child-components-container")[0]
 
-        services.remove(services[0])
-        service_groups.append({top: services})
+        for div in service_divs.find_all("span", class_="name"):
+            service = div.text.strip()
+            status = div.find_next("span").text.strip()
+            if status == "?":
+                status = div.find_next("span").find_next("span").text.strip()
+            services[service] = status
+            statuses.append(status)
 
-    pprint(service_groups)
+        service_groups[group_name] = services
+
+    return service_groups
 
 
 if __name__ == "__main__":
-    # operational = check_status()
-    # if not operational:
-    scrape_page()
+    operational = check_status()
+    if not operational:
+        service_groups = scrape_page()
