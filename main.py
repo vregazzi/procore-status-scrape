@@ -43,5 +43,8 @@ def scrape_page() -> dict[dict, str]:
 
 if __name__ == "__main__":
     operational = check_status()
-    if not operational:
+    if operational:
+        print("All systems operational")
+    else:
         service_groups = scrape_page()
+        pprint(service_groups)
