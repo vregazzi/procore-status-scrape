@@ -4,7 +4,8 @@ from procore import check_status as procore_check_status
 from procore import scrape_page as procore_scrape_page
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    fmt = '%(levelname)7s | %(asctime)s | %(message)s'
+    logging.basicConfig(level=logging.INFO, format=fmt)
     operational = procore_check_status()
 
     if operational:
