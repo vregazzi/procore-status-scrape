@@ -2,9 +2,13 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape_page() -> dict[dict, str]:
+def scrape_page() -> str:
     r = requests.get('https://status.procore.com/')
-    soup = BeautifulSoup(r.text, 'html.parser')
+    return r.text
+
+def process_scrape() -> dict[dict, str]:
+    page = scrape_page()
+    soup = BeautifulSoup(page, 'html.parser')
     service_groups = {}
     statuses = []
 
