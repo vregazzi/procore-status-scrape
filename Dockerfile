@@ -2,7 +2,6 @@ FROM python:3.11
 
 WORKDIR /usr/app/src
 
-COPY asana/* ./asana/
 COPY procore/* ./procore/
 COPY main.py ./
 COPY requirements.txt ./
