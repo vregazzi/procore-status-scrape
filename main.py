@@ -26,7 +26,7 @@ def get_info():
         logging.info("All systems operational")
         _upload(time)
         return
-    
+
     logging.warning("Some systems are down")
     logging.info("Scraping page for more information")
 
