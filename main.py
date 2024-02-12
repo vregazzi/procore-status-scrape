@@ -38,6 +38,7 @@ def get_info():
 
 
 def _upload(time: str):
+    logging.debug("Checking for connection string and container name")
     if CONNECTION_STRING == "" or CONTAINER_NAME == "":
         logging.error("Connection string or container name not found")
         return
@@ -45,9 +46,11 @@ def _upload(time: str):
     assert isinstance(CONTAINER_NAME, str)
 
     # zip directory and delete it
+    logging.info("Zipping files and removing temp directory")
     shutil.make_archive(f'{time}_files', 'zip', "temp")
     shutil.rmtree("temp")
 
+    logging.info("Uploading files to Azure Blob Storage")
     blob_client = BlobServiceClient.from_connection_string(CONNECTION_STRING)
     blob_client = blob_client.get_blob_client(
         container=CONTAINER_NAME,
