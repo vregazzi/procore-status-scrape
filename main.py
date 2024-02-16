@@ -13,7 +13,7 @@ CONNECTION_STRING = config("CONNECTION_STRING", "")
 CONTAINER_NAME = config("CONTAINER_NAME", "")
 
 
-def get_info():
+def get_info() -> None:
     time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     fmt = '%(asctime)s | %(levelname)7s | %(message)s'
     if not os.path.exists("temp"):
@@ -37,7 +37,7 @@ def get_info():
     _upload(time)
 
 
-def _upload(time: str):
+def _upload(time: str) -> None:
     logging.debug("Checking for connection string and container name")
     if CONNECTION_STRING == "" or CONTAINER_NAME == "":
         logging.error("Connection string or container name not found")
