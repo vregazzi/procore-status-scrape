@@ -6,17 +6,25 @@ def scrape_page() -> str:
     r = requests.get('https://status.procore.com/')
     return r.text
 
+
 def process_scrape() -> dict[dict, str]:
     page = scrape_page()
     soup = BeautifulSoup(page, 'html.parser')
     service_groups = {}
     statuses = []
 
-    all_group_divs = soup.find_all("div", class_='component-container border-color is-group')
+    all_group_divs = soup.find_all(
+        "div",
+        class_='component-container border-color is-group'
+    )
+
     for group_div in all_group_divs:
         group_name = (group_div.span.text.strip())
         services = {}
-        service_divs = group_div.find_all("div", class_="child-components-container")[0]
+        service_divs = group_div.find_all(
+            "div",
+            class_="child-components-container"
+        )[0]
 
         for div in service_divs.find_all("span", class_="name"):
             service = div.text.strip()
@@ -29,3 +37,8 @@ def process_scrape() -> dict[dict, str]:
         service_groups[group_name] = services
 
     return service_groups
+
+
+if __name__ == "__main__":
+    from pprint import pprint
+    pprint(process_scrape())
