@@ -19,13 +19,10 @@ def get_info() -> None:
     operational, it will scrape the Procore status page. All data will be
     logged and uploaded to Azure Blob Storage.
     """
+    _ensure_temp_dir()
     time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-    fmt = '%(asctime)s | %(levelname)7s | %(message)s'
-    if not os.path.exists("temp"):
-        os.makedirs("temp")
-
-    logging.basicConfig(
-        level=logging.INFO, format=fmt, filename=f"temp/{time}.log")
+    logging.basicConfig(format='%(asctime)s | %(levelname)7s | %(message)s',
+                        level=logging.INFO, filename=f"temp/{time}.log")
 
     if procore_check_status():
         logging.info("All systems operational")
@@ -40,6 +37,12 @@ def get_info() -> None:
         f.write(procore_scrape_page())
 
     _upload(time)
+
+
+def _ensure_temp_dir() -> None:
+    """Creates temp directory if it doesn't exist."""
+    if not os.path.exists("temp"):
+        os.makedirs("temp")
 
 
 def _upload(time: str) -> None:
