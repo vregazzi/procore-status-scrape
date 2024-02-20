@@ -3,11 +3,16 @@ from bs4 import BeautifulSoup
 
 
 def scrape_page() -> str:
+    """Scrape the Procore status page and return all HTML as a string."""
     r = requests.get('https://status.procore.com/')
     return r.text
 
 
 def process_scrape() -> dict[dict, str]:
+    """
+    Process the scraped page and return a dictionary of service groups and
+    their statuses as a dictionary.
+    """
     page = scrape_page()
     soup = BeautifulSoup(page, 'html.parser')
     service_groups = {}

@@ -14,6 +14,11 @@ CONTAINER_NAME = config("CONTAINER_NAME", "")
 
 
 def get_info() -> None:
+    """
+    Checks the status of Procore services via API. If all systems are not
+    operational, it will scrape the Procore status page. All data will be
+    logged and uploaded to Azure Blob Storage.
+    """
     time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     fmt = '%(asctime)s | %(levelname)7s | %(message)s'
     if not os.path.exists("temp"):
@@ -38,6 +43,7 @@ def get_info() -> None:
 
 
 def _upload(time: str) -> None:
+    """Moves files to Azure Blob Storage and removes temp directory."""
     logging.debug("Checking for connection string and container name")
     if CONNECTION_STRING == "" or CONTAINER_NAME == "":
         logging.error("Connection string or container name not found")
